@@ -1,15 +1,11 @@
 package app
 
 import (
-	"context"
 	"fmt"
-	"log"
-	"os"
-	"os/signal"
-	"syscall"
-	"time"
 	"github.com/urfave/cli"
-	)
+	log "github.com/sirupsen/logrus"
+	"os"
+)
 
 const (
 	gitSummary = ""
@@ -17,7 +13,7 @@ const (
 	buildStamp = ""
 )
 
-func CreateCLIApp() {
+func InitCLIApp() {
 	app := cli.NewApp()
 	app.Name = APP_NAME
 	app.Usage = APP_USAGE
@@ -26,8 +22,8 @@ func CreateCLIApp() {
 
 	app.Commands = []cli.Command{
 		{
-			Name:  APP_NAME,
-			Usage: APP_USAGE,
+			Name:  "start",
+			Usage: "<service name> start",
 			Flags: []cli.Flag{
 				cli.StringFlag{
 					Name:   "example flag",
@@ -46,49 +42,53 @@ func CreateCLIApp() {
 
 func serviceActionHandler(c *cli.Context) error {
 
-	retryDelay, err := time.ParseDuration(c.String("retry-duration"))
-	if err != nil {
-		return err
-	}
-	downlineInterval, err := time.ParseDuration(c.String("downline-interval"))
-	if err != nil {
-		return err
-	}
+	log.Info("service running")
 
-	log.Printf("Starting %v %v-%v", appName, gitSummary, gitBranch)
-	startOpListener(c.Int("operational-port"))
+	//retryDelay, err := time.ParseDuration(c.String("retry-duration"))
+	//if err != nil {
+	//	return err
+	//}
+	//downlineInterval, err := time.ParseDuration(c.String("downline-interval"))
+	//if err != nil {
+	//	return err
+	//}
+	//
+	//log.Printf("Starting %v %v-%v", appName, gitSummary, gitBranch)
+	//startOpListener(c.Int("operational-port"))
+	//
+	//ctx, cancel := context.WithCancel(context.Background())
+	//defer cancel()
+	//
+	//downline := NewDownlineExecutor()
+	//downline.Interval = downlineInterval
+	//go func() {
+	//	sCh := make(chan os.Signal)
+	//	signal.Notify(sCh, os.Interrupt, syscall.SIGTERM)
+	//	<-sCh
+	//
+	//	log.Info("Shutdown requested, cleaning up first")
+	//	downline.Close()
+	//	cancel()
+	//	log.Info("Shutdown complete")
+	//}()
+	//
+	//
+	//for {
+	//	err := Index(ctx, c, chainedHandler)
+	//	if err == nil {
+	//		return nil
+	//	}
+	//	if err == context.Canceled {
+	//		return err
+	//	}
+	//
+	//	log.Errorf("retrying in %s. error: %s", c.String("retry-duration"), err)
+	//	select {
+	//	case <-ctx.Done():
+	//		return ctx.Err()
+	//	case <-time.After(retryDelay):
+	//	}
+	//}
 
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-
-	downline := NewDownlineExecutor()
-	downline.Interval = downlineInterval
-	go func() {
-		sCh := make(chan os.Signal)
-		signal.Notify(sCh, os.Interrupt, syscall.SIGTERM)
-		<-sCh
-
-		log.Info("Shutdown requested, cleaning up first")
-		downline.Close()
-		cancel()
-		log.Info("Shutdown complete")
-	}()
-
-
-	for {
-		err := Index(ctx, c, chainedHandler)
-		if err == nil {
-			return nil
-		}
-		if err == context.Canceled {
-			return err
-		}
-
-		log.Errorf("retrying in %s. error: %s", c.String("retry-duration"), err)
-		select {
-		case <-ctx.Done():
-			return ctx.Err()
-		case <-time.After(retryDelay):
-		}
-	}
+	return nil
 }
