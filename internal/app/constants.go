@@ -1,4 +1,4 @@
-package cli
+package app
 
 const APP_NAME = ""
 const APP_USAGE = ""
