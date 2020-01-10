@@ -10,9 +10,6 @@ LINKFLAGS :=-s \
 build:
 	cd cmd && CGO_ENABLED=0 go build -ldflags "$(LINKFLAGS)" -o ../$(SERVICE_NAME) -a .
 
-install:
-	go get -t -d -v ./...
-
 test:
 	go vet .
 	go test -race
