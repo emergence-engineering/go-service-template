@@ -1,5 +1,17 @@
 # Emergence Engineering Go Service template 
 
+## Features
+- utilizing Go modules
+- light and secure docker image based on 🏔[Alpine](https://hub.docker.com/_/alpine/)
+- [multistage build](https://docs.docker.com/develop/develop-images/multistage-build/)
+- GNU Makefiles 
+- based on official Go project layout by [Go standards](https://github.com/golang-standards/project-layout)
+- graceful shutdown 😇
+- CLI with [urfave/cli](https://github.com/urfave/cli)
+- Logging with [logrus](https://github.com/sirupsen/logrus)
+- Automatic reconnecting to dependent services
+
+
 ## Module
 
 ### Init new Go module
